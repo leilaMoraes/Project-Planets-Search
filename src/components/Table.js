@@ -30,7 +30,9 @@ function Table() {
               <td>{planets.terrain}</td>
               <td>{planets.surface_water}</td>
               <td>{planets.population}</td>
-              <td>{planets.films}</td>
+              <td>
+                {planets.films.map((film, i) => <p key={ i }>{film}</p>)}
+              </td>
               <td>{planets.created}</td>
               <td>{planets.edited}</td>
               <td>{planets.url}</td>
