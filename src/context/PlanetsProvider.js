@@ -8,9 +8,9 @@ export default function PlanetsProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [filterName, setFilterName] = useState([]);
   const [filterData, setFilterData] = useState([]);
-  const [filterColumn] = useState('population');
-  const [filterComparison] = useState('maior que');
-  const [filterValue] = useState('0');
+  const [filterColumn, setFilterColumn] = useState('population');
+  const [filterComparison, setFilterComparison] = useState('maior que');
+  const [filterValue, setFilterValue] = useState('0');
 
   useEffect(() => {
     const getData = async () => {
@@ -30,7 +30,18 @@ export default function PlanetsProvider({ children }) {
   }, [filterName]);
 
   const handleChange = ({ target }) => {
-    setFilterName(target.value);
+    switch (target.id) {
+    case 'search':
+      return setFilterName(target.value);
+    case 'column':
+      return setFilterColumn(target.value);
+    case 'comparison':
+      return setFilterComparison(target.value);
+    case 'value':
+      return setFilterValue(target.value);
+    default:
+      setData(data);
+    }
   };
 
   const values = useMemo(() => ({

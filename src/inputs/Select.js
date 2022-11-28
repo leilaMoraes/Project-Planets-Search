@@ -26,7 +26,7 @@ Select.propTypes = {
   id: PropTypes.string,
   handleChange: PropTypes.func,
   selectLabel: PropTypes.node,
-  option: PropTypes.arrayOf.isRequired,
+  option: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
 };
 
