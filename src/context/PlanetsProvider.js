@@ -23,11 +23,21 @@ export default function PlanetsProvider({ children }) {
     getData();
   }, []);
 
-  useEffect(() => {
-    const filtering = data.filter((planet) => planet
-      .name.toUpperCase().includes(filterName.toUpperCase()));
-    setFilterData(filtering);
-  }, [filterName]);
+  const handleClick = () => {
+    if (filterComparison === 'maior que') {
+      const filtering = data.filter((planet) => Number(planet[filterColumn])
+      > Number(filterValue));
+      setFilterData(filtering);
+    } if (filterComparison === 'menor que') {
+      const filtering = data.filter((planet) => Number(planet[filterColumn])
+      < Number(filterValue));
+      setFilterData(filtering);
+    } if (filterComparison === 'igual a') {
+      const filtering = data.filter((planet) => Number(planet[filterColumn])
+      === Number(filterValue));
+      setFilterData(filtering);
+    }
+  };
 
   const handleChange = ({ target }) => {
     switch (target.id) {
@@ -40,12 +50,28 @@ export default function PlanetsProvider({ children }) {
     case 'value':
       return setFilterValue(target.value);
     default:
-      setData(data);
+      setFilterData(data);
     }
   };
 
+  useEffect(() => {
+    if (filterName.length > 0) {
+      const filtering = data.filter((planet) => planet
+        .name.toUpperCase().includes(filterName.toUpperCase()));
+      setFilterData(filtering);
+    } else {
+      setFilterData(data);
+    }
+  }, [filterName]);
+
   const values = useMemo(() => ({
-    loading, handleChange, filterData, filterColumn, filterComparison, filterValue,
+    loading,
+    handleChange,
+    filterData,
+    filterColumn,
+    filterComparison,
+    filterValue,
+    handleClick,
   }), [loading, filterData, filterColumn, filterComparison, filterValue]);
 
   return (

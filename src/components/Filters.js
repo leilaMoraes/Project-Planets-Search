@@ -10,7 +10,7 @@ const comparison = ['maior que', 'menor que', 'igual a'];
 
 function Filters() {
   const { filterColumn, filterComparison, filterValue,
-    handleChange } = useContext(PlanetsContext);
+    handleChange, handleClick } = useContext(PlanetsContext);
   return (
     <div>
       <Select
@@ -50,6 +50,7 @@ function Filters() {
       <Button
         dataName="button-filter"
         id="btnFilter"
+        handleClick={ handleClick }
         btnName="FILTRAR"
       />
     </div>
