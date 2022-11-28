@@ -6,7 +6,7 @@ const tableHead = ['Name', 'Rotation Period', 'Orbital Period', 'Diameter', 'Cli
   'Edited', 'URL'];
 
 function Table() {
-  const { data, loading } = useContext(PlanetsContext);
+  const { filterData, loading } = useContext(PlanetsContext);
   return (
     <div>
       {loading
@@ -16,13 +16,13 @@ function Table() {
             <thead>
               <tr>
                 { tableHead.map((head, i) => (
-                  <th className="table-th" key={ i }>
+                  <th key={ i }>
                     { head }
                   </th>)) }
               </tr>
             </thead>
             <tbody>
-              {data.length > 0 && data.map((planets) => (
+              {filterData.length > 0 && filterData.map((planets) => (
                 <tr key={ planets.name }>
                   <td data-testid="planet-name">{planets.name }</td>
                   <td>{planets.rotation_period }</td>
