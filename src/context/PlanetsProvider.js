@@ -8,6 +8,9 @@ export default function PlanetsProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [filterName, setFilterName] = useState([]);
   const [filterData, setFilterData] = useState([]);
+  const [filterColumn] = useState('population');
+  const [filterComparison] = useState('maior que');
+  const [filterValue] = useState('0');
 
   useEffect(() => {
     const getData = async () => {
@@ -31,8 +34,8 @@ export default function PlanetsProvider({ children }) {
   };
 
   const values = useMemo(() => ({
-    loading, handleChange, filterData,
-  }), [loading, filterData]);
+    loading, handleChange, filterData, filterColumn, filterComparison, filterValue,
+  }), [loading, filterData, filterColumn, filterComparison, filterValue]);
 
   return (
     <PlanetsContext.Provider value={ values }>
