@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PlanetsContext from './PlanetsContext';
 import fetchApi from '../services/fetchApi';
@@ -6,7 +6,6 @@ import fetchApi from '../services/fetchApi';
 export default function PlanetsProvider({ children }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterName, setFilterName] = useState([]);
   const [filterData, setFilterData] = useState([]);
   const [filterColumn, setFilterColumn] = useState('population');
   const [filterComparison, setFilterComparison] = useState('maior que');
@@ -25,15 +24,15 @@ export default function PlanetsProvider({ children }) {
 
   const handleClick = () => {
     if (filterComparison === 'maior que') {
-      const filtering = data.filter((planet) => Number(planet[filterColumn])
+      const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       > Number(filterValue));
       setFilterData(filtering);
     } if (filterComparison === 'menor que') {
-      const filtering = data.filter((planet) => Number(planet[filterColumn])
+      const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       < Number(filterValue));
       setFilterData(filtering);
     } if (filterComparison === 'igual a') {
-      const filtering = data.filter((planet) => Number(planet[filterColumn])
+      const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       === Number(filterValue));
       setFilterData(filtering);
     }
@@ -42,7 +41,8 @@ export default function PlanetsProvider({ children }) {
   const handleChange = ({ target }) => {
     switch (target.id) {
     case 'search':
-      return setFilterName(target.value);
+      return setFilterData(data.filter((planet) => planet
+        .name.toUpperCase().includes(target.value.toUpperCase())));
     case 'column':
       return setFilterColumn(target.value);
     case 'comparison':
@@ -54,17 +54,7 @@ export default function PlanetsProvider({ children }) {
     }
   };
 
-  useEffect(() => {
-    if (filterName.length > 0) {
-      const filtering = data.filter((planet) => planet
-        .name.toUpperCase().includes(filterName.toUpperCase()));
-      setFilterData(filtering);
-    } else {
-      setFilterData(data);
-    }
-  }, [filterName]);
-
-  const values = useMemo(() => ({
+  const values = ({
     loading,
     handleChange,
     filterData,
@@ -72,7 +62,7 @@ export default function PlanetsProvider({ children }) {
     filterComparison,
     filterValue,
     handleClick,
-  }), [loading, filterData, filterColumn, filterComparison, filterValue]);
+  });
 
   return (
     <PlanetsContext.Provider value={ values }>
