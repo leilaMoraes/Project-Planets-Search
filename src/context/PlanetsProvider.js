@@ -38,11 +38,18 @@ export default function PlanetsProvider({ children }) {
     }
   };
 
+  const onChance = (filterName) => {
+    if (filterName.length > 0) {
+      return setFilterData(filterData.filter((planet) => planet
+        .name.toUpperCase().includes(filterName.toUpperCase())));
+    }
+    return setFilterData(data);
+  };
+
   const handleChange = ({ target }) => {
     switch (target.id) {
     case 'search':
-      return setFilterData(data.filter((planet) => planet
-        .name.toUpperCase().includes(target.value.toUpperCase())));
+      return onChance(target.value);
     case 'column':
       return setFilterColumn(target.value);
     case 'comparison':
