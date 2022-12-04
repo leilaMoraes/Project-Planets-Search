@@ -3,14 +3,11 @@ import PlanetsContext from '../context/PlanetsContext';
 import Button from '../inputs/Button';
 import Select from '../inputs/Select';
 
-const column = ['population', 'orbital_period', 'diameter', 'rotation_period',
-  'surface_water'];
-
 const comparison = ['maior que', 'menor que', 'igual a'];
 
 function Filters() {
   const { filterColumn, filterComparison, filterValue,
-    handleChange, handleClick } = useContext(PlanetsContext);
+    handleChange, handleClick, column } = useContext(PlanetsContext);
   return (
     <div>
       <Select

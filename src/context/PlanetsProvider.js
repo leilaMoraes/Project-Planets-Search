@@ -10,6 +10,8 @@ export default function PlanetsProvider({ children }) {
   const [filterColumn, setFilterColumn] = useState('population');
   const [filterComparison, setFilterComparison] = useState('maior que');
   const [filterValue, setFilterValue] = useState('0');
+  const [column, setColumn] = useState(['orbital_period', 'population', 'diameter',
+    'rotation_period', 'surface_water']);
 
   useEffect(() => {
     const getData = async () => {
@@ -30,12 +32,14 @@ export default function PlanetsProvider({ children }) {
     } if (filterComparison === 'menor que') {
       const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       < Number(filterValue));
+      console.log(filterColumn);
       setFilterData(filtering);
     } if (filterComparison === 'igual a') {
       const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       === Number(filterValue));
       setFilterData(filtering);
     }
+    setColumn(column.filter((string) => string !== filterColumn));
   };
 
   const onChance = (filterName) => {
@@ -69,6 +73,7 @@ export default function PlanetsProvider({ children }) {
     filterComparison,
     filterValue,
     handleClick,
+    column,
   });
 
   return (
