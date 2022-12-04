@@ -7,7 +7,9 @@ const comparison = ['maior que', 'menor que', 'igual a'];
 
 function Filters() {
   const { filterColumn, filterComparison, filterValue,
-    handleChange, handleClick, column } = useContext(PlanetsContext);
+    handleChange, handleClick, show, filter, btn,
+    handleClickRemoveAll, filterHeadColumn,
+    handleEachClick } = useContext(PlanetsContext);
   return (
     <div>
       <Select
@@ -17,7 +19,7 @@ function Filters() {
         value={ filterColumn }
         handleChange={ handleChange }
         option={
-          column.map((e, index) => (
+          filterHeadColumn.map((e, index) => (
             <option key={ index }>{ e }</option>
           ))
         }
@@ -47,9 +49,28 @@ function Filters() {
       <Button
         dataName="button-filter"
         id="btnFilter"
+        disabled={ btn }
         handleClick={ handleClick }
         btnName="FILTRAR"
       />
+      <Button
+        dataName="button-remove-filters"
+        id="btnRemoveAll"
+        handleClick={ handleClickRemoveAll }
+        btnName="REMOVER FILTROS"
+      />
+      {show
+      && (filter.map((phrase, i) => (
+        <p key={ i } data-testid="filter">
+          {phrase}
+          {' '}
+          <Button
+            id={ phrase }
+            handleClick={ handleEachClick }
+            btnName="APAGAR"
+          />
+        </p>
+      )))}
     </div>
   );
 }

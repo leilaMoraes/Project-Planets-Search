@@ -10,10 +10,15 @@ export default function PlanetsProvider({ children }) {
   const [filterColumn, setFilterColumn] = useState('population');
   const [filterComparison, setFilterComparison] = useState('maior que');
   const [filterValue, setFilterValue] = useState('0');
-  const [column, setColumn] = useState(['orbital_period', 'population', 'diameter',
+  const [show, setShow] = useState(false);
+  const [filter, setFilter] = useState([]);
+  const [column] = useState(['population', 'orbital_period', 'diameter',
     'rotation_period', 'surface_water']);
+  const [filterHeadColumn, setFilterHeadColumn] = useState([]);
+  const [btn, setBtn] = useState(false);
 
   useEffect(() => {
+    setFilterHeadColumn(column);
     const getData = async () => {
       setLoading(true);
       const useFetch = await fetchApi();
@@ -22,7 +27,11 @@ export default function PlanetsProvider({ children }) {
       setLoading(false);
     };
     getData();
-  }, []);
+  }, [column]);
+
+  useEffect(() => {
+    setFilterColumn(filterHeadColumn[0]);
+  }, [filterHeadColumn]);
 
   const handleClick = () => {
     if (filterComparison === 'maior que') {
@@ -32,14 +41,17 @@ export default function PlanetsProvider({ children }) {
     } if (filterComparison === 'menor que') {
       const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       < Number(filterValue));
-      console.log(filterColumn);
       setFilterData(filtering);
     } if (filterComparison === 'igual a') {
       const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       === Number(filterValue));
       setFilterData(filtering);
+    } if (filterHeadColumn.length === 1) {
+      setBtn(true);
     }
-    setColumn(column.filter((string) => string !== filterColumn));
+    setFilterHeadColumn(filterHeadColumn.filter((string) => string !== filterColumn));
+    setFilter([...filter, `${filterColumn} ${filterComparison} ${filterValue}`]);
+    setShow(true);
   };
 
   const onChance = (filterName) => {
@@ -65,6 +77,20 @@ export default function PlanetsProvider({ children }) {
     }
   };
 
+  const handleClickRemoveAll = () => {
+    setFilterData(data);
+    setFilterHeadColumn(column);
+    setShow(false);
+    setFilter([]);
+    setBtn(false);
+  };
+
+  const handleEachClick = ({ target: { id } }) => {
+    setBtn(false);
+    setFilter(filter.filter((element) => element !== id));
+    setFilterHeadColumn([...filterHeadColumn, id.split(' ')[0]]);
+  };
+
   const values = ({
     loading,
     handleChange,
@@ -73,7 +99,12 @@ export default function PlanetsProvider({ children }) {
     filterComparison,
     filterValue,
     handleClick,
-    column,
+    show,
+    filter,
+    handleClickRemoveAll,
+    filterHeadColumn,
+    handleEachClick,
+    btn,
   });
 
   return (

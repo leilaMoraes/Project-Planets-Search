@@ -26,13 +26,14 @@ Select.propTypes = {
   id: PropTypes.string,
   handleChange: PropTypes.func,
   selectLabel: PropTypes.node,
-  option: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
+  option: PropTypes.node.isRequired,
+  value: PropTypes.string,
 };
 
 Select.defaultProps = {
   selectClass: '',
   id: '',
+  value: '',
   handleChange: () => {},
   selectLabel: null,
 };
