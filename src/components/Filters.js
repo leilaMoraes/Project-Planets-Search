@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 import Button from '../inputs/Button';
+import Radio from '../inputs/Radio';
 import Select from '../inputs/Select';
 
 const comparison = ['maior que', 'menor que', 'igual a'];
@@ -8,8 +9,8 @@ const comparison = ['maior que', 'menor que', 'igual a'];
 function Filters() {
   const { filterColumn, filterComparison, filterValue,
     handleChange, handleClick, show, filter, btn,
-    handleClickRemoveAll, filterHeadColumn,
-    handleEachClick } = useContext(PlanetsContext);
+    handleClickRemoveAll, filterHeadColumn, column,
+    handleEachClick, order, handleClickOrder } = useContext(PlanetsContext);
   return (
     <div>
       <Select
@@ -52,6 +53,38 @@ function Filters() {
         disabled={ btn }
         handleClick={ handleClick }
         btnName="FILTRAR"
+      />
+      <Select
+        id="sortC"
+        selectLabel="Ordenar"
+        dataName="column-sort"
+        value={ order.column }
+        handleChange={ handleChange }
+        option={
+          column.map((e, index) => (
+            <option key={ index }>{ e }</option>
+          ))
+        }
+      />
+      <Radio
+        id="asc"
+        radioLabel="Ascendente"
+        value="ASC"
+        dataName="column-sort-input-asc"
+        onClick={ handleChange }
+      />
+      <Radio
+        id="desc"
+        radioLabel="Descendente"
+        value="DESC"
+        dataName="column-sort-input-desc"
+        onClick={ handleChange }
+      />
+      <Button
+        dataName="column-sort-button"
+        id="btnOrder"
+        handleClick={ handleClickOrder }
+        btnName="ORDENAR"
       />
       <Button
         dataName="button-remove-filters"

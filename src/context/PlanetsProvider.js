@@ -17,6 +17,7 @@ export default function PlanetsProvider({ children }) {
   const [filterHeadColumn, setFilterHeadColumn] = useState([]);
   const [btn, setBtn] = useState(false);
   const [prev, setPrev] = useState({});
+  const [order, setOrder] = useState({ column: 'population', sort: 'ASC' });
 
   useEffect(() => {
     setFilterHeadColumn(column);
@@ -76,6 +77,8 @@ export default function PlanetsProvider({ children }) {
       return setFilterComparison(target.value);
     case 'value':
       return setFilterValue(target.value);
+    case 'sortC':
+      return setOrder({ column: target.value });
     default:
       setFilterData(data);
     }
@@ -101,6 +104,10 @@ export default function PlanetsProvider({ children }) {
     }
   };
 
+  const handleClickOrder = () => {
+    console.log(order);
+  };
+
   const values = ({
     loading,
     handleChange,
@@ -115,6 +122,9 @@ export default function PlanetsProvider({ children }) {
     filterHeadColumn,
     handleEachClick,
     btn,
+    column,
+    order,
+    handleClickOrder,
   });
 
   return (

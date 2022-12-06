@@ -75,7 +75,7 @@ describe('Teste do App', () => {
     waitFor(() => expect(/naboo/i).toBeInTheDocument);
   });
 
-  it('07 - Testa a filtragem pelos inputs de número', () => {
+  it('07 - Testa a filtragem pelos inputs de número', async() => {
 
     const selectColumn = screen.getByTestId('column-filter');
     const selectComparison = screen.getByTestId('comparison-filter');
@@ -83,13 +83,13 @@ describe('Teste do App', () => {
     const planetName = screen.findAllByTestId('planet-name');
     const filterBtn = screen.getByTestId('button-filter');
 
-    waitFor(() => expect(planetName).toHaveLength(10));
+    await waitFor(() => expect(planetName).toHaveLength(10));
 
     userEvent.selectOptions(selectColumn, 'rotation_period');
     userEvent.selectOptions(selectComparison, 'maior que');
-    userEvent.type(inputNumber, 20);
+    userEvent.type(inputNumber, '20');
     userEvent.click(filterBtn);
 
-    waitFor(() => expect(planetName).toHaveLength(8));
+    await waitFor(() => expect(planetName).toHaveLength(8));
   });
 });
