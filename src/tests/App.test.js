@@ -13,7 +13,7 @@ describe('Teste do App', () => {
         <App />
       </PlanetsProvider>
     ),
-    global.fetch = jest.fn(async () => ({
+    global.fetch = jest.fn( async () => ({
       json: async () => data}))
   );
 
@@ -23,19 +23,27 @@ describe('Teste do App', () => {
     const inputNumber = screen.getByTestId('value-filter');
     const selectColumn = screen.getByTestId('column-filter');
     const selectComparison = screen.getByTestId('comparison-filter');
+    const orderColumn = screen.getByTestId('column-sort');
+    const orderAsc = screen.getByTestId('column-sort-input-asc');
+    const orderDesc = screen.getByTestId('column-sort-input-desc');
 
     expect(inputName).toBeInTheDocument();
     expect(inputNumber).toBeInTheDocument();
     expect(selectColumn).toBeInTheDocument();
     expect(selectComparison).toBeInTheDocument();
+    expect(orderColumn).toBeInTheDocument();
+    expect(orderAsc).toBeInTheDocument();
+    expect(orderDesc).toBeInTheDocument();
   });
 
   it('02 - Testa se os botões estão sendo renderizados na tela', () => {
 
-    const filterBtn = screen.getByTestId('button-filter');
+    const btns = screen.getAllByRole('button');
 
-    expect(filterBtn).toBeInTheDocument();
-    expect(filterBtn).toHaveTextContent(/filtrar/i);
+    expect(btns).toHaveLength(3);
+    expect(btns[0]).toHaveTextContent(/filtrar/i);
+    expect(btns[1]).toHaveTextContent(/ordenar/i);
+    expect(btns[2]).toHaveTextContent(/remover filtros/i);
   });
 
   it('03 - Testa se `Loading...` é renderizado na tela', () => {
@@ -75,7 +83,26 @@ describe('Teste do App', () => {
     waitFor(() => expect(/naboo/i).toBeInTheDocument);
   });
 
-  it('07 - Testa a filtragem pelos inputs de número', async() => {
+  it('07 - Testa as mudanças na tela quando o botão filtrar é clicado', () => {
+
+    const selectColumn = screen.getByTestId('column-filter');
+    const selectComparison = screen.getByTestId('comparison-filter');
+    const inputNumber = screen.getByTestId('value-filter');
+    const filterBtn = screen.getByTestId('button-filter');
+
+    userEvent.selectOptions(selectColumn, 'rotation_period');
+    userEvent.selectOptions(selectComparison, 'maior que');
+    userEvent.type(inputNumber, '20');
+    userEvent.click(filterBtn);
+
+    const text = screen.findByText(/rotation_period maior que 20/i);
+    const btn = screen.findByRole('btn', {name: /apagar/i});
+
+    waitFor(() => expect(text).toBeInTheDocument);
+    waitFor(() => expect(btn).toBeInTheDocument);
+  });
+
+  it('08 - Testa a filtragem pelos inputs de número', () => {
 
     const selectColumn = screen.getByTestId('column-filter');
     const selectComparison = screen.getByTestId('comparison-filter');
@@ -83,13 +110,13 @@ describe('Teste do App', () => {
     const planetName = screen.findAllByTestId('planet-name');
     const filterBtn = screen.getByTestId('button-filter');
 
-    await waitFor(() => expect(planetName).toHaveLength(10));
+    waitFor(() => expect(planetName).toHaveLength(10));
 
     userEvent.selectOptions(selectColumn, 'rotation_period');
     userEvent.selectOptions(selectComparison, 'maior que');
     userEvent.type(inputNumber, '20');
     userEvent.click(filterBtn);
 
-    await waitFor(() => expect(planetName).toHaveLength(8));
+    waitFor(() => expect(planetName).toHaveLength(8));
   });
 });
