@@ -16,6 +16,7 @@ export default function PlanetsProvider({ children }) {
     'rotation_period', 'surface_water']);
   const [filterHeadColumn, setFilterHeadColumn] = useState([]);
   const [btn, setBtn] = useState(false);
+  const [prev, setPrev] = useState({});
 
   useEffect(() => {
     setFilterHeadColumn(column);
@@ -38,14 +39,17 @@ export default function PlanetsProvider({ children }) {
       const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       > Number(filterValue));
       setFilterData(filtering);
+      setPrev({ one: filterData, two: filtering });
     } if (filterComparison === 'menor que') {
       const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       < Number(filterValue));
       setFilterData(filtering);
+      setPrev({ one: filterData, two: filtering });
     } if (filterComparison === 'igual a') {
       const filtering = filterData.filter((planet) => Number(planet[filterColumn])
       === Number(filterValue));
       setFilterData(filtering);
+      setPrev({ one: filterData, two: filtering });
     } if (filterHeadColumn.length === 1) {
       setBtn(true);
     }
@@ -89,6 +93,12 @@ export default function PlanetsProvider({ children }) {
     setBtn(false);
     setFilter(filter.filter((element) => element !== id));
     setFilterHeadColumn([...filterHeadColumn, id.split(' ')[0]]);
+    const number = 4;
+    if (filterHeadColumn.length === number) {
+      setFilterData(data);
+    } else {
+      setFilterData(prev.one);
+    }
   };
 
   const values = ({
