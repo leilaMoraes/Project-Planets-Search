@@ -71,14 +71,16 @@ function Filters() {
         radioLabel="Ascendente"
         value="ASC"
         dataName="column-sort-input-asc"
-        onClick={ handleChange }
+        checked={ order.sort === 'ASC' }
+        onChange={ handleChange }
       />
       <Radio
         id="desc"
         radioLabel="Descendente"
         value="DESC"
         dataName="column-sort-input-desc"
-        onClick={ handleChange }
+        checked={ order.sort === 'DESC' }
+        onChange={ handleChange }
       />
       <Button
         dataName="column-sort-button"

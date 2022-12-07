@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function Radio(props) {
-  const { id, radioLabel, radioClass, value, dataName, onClick } = props;
+  const { id, radioLabel, radioClass, value, dataName, checked, onChange } = props;
   return (
     <label htmlFor={ id }>
       <input
@@ -12,7 +12,8 @@ function Radio(props) {
         type="radio"
         value={ value }
         data-testid={ dataName }
-        onClick={ onClick }
+        checked={ checked }
+        onChange={ onChange }
       />
       {radioLabel}
     </label>
@@ -21,18 +22,20 @@ function Radio(props) {
 
 Radio.propTypes = {
   radioClass: PropTypes.string,
-  dataName: PropTypes.string.isRequired,
   id: PropTypes.string,
-  onClick: PropTypes.func,
-  radioLabel: PropTypes.node,
   value: PropTypes.string,
+  dataName: PropTypes.string.isRequired,
+  checked: PropTypes.bool,
+  onChange: PropTypes.func,
+  radioLabel: PropTypes.node,
 };
 
 Radio.defaultProps = {
   radioClass: '',
   id: '',
   value: '',
-  onClick: () => {},
+  onChange: () => {},
+  checked: false,
   radioLabel: null,
 };
 

@@ -17,7 +17,7 @@ export default function PlanetsProvider({ children }) {
   const [filterHeadColumn, setFilterHeadColumn] = useState([]);
   const [btn, setBtn] = useState(false);
   const [prev, setPrev] = useState({});
-  const [order, setOrder] = useState({ column: 'population', sort: 'ASC' });
+  const [order, setOrder] = useState({ column: 'population', sort: '' });
 
   useEffect(() => {
     setFilterHeadColumn(column);
@@ -78,7 +78,11 @@ export default function PlanetsProvider({ children }) {
     case 'value':
       return setFilterValue(target.value);
     case 'sortC':
-      return setOrder({ column: target.value });
+      return setOrder({ ...order, column: target.value });
+    case 'asc':
+      return setOrder({ ...order, sort: 'ASC' });
+    case 'desc':
+      return setOrder({ ...order, sort: 'DESC' });
     default:
       setFilterData(data);
     }
@@ -105,7 +109,23 @@ export default function PlanetsProvider({ children }) {
   };
 
   const handleClickOrder = () => {
-    console.log(order);
+    const unk = filterData.filter((planet) => planet[order.column] === 'unknown');
+    const withoutUnk = filterData.filter((planet) => planet[order.column] !== 'unknown');
+    if (order.sort === 'ASC') {
+      const asc = withoutUnk.sort((x, y) => x[order.column] - y[order.column]);
+      if (unk.length === 0) {
+        setFilterData(asc);
+      } else {
+        setFilterData(asc.concat(unk));
+      }
+    } else {
+      const desc = withoutUnk.sort((x, y) => y[order.column] - x[order.column]);
+      if (unk.length === 0) {
+        setFilterData(desc);
+      } else {
+        setFilterData(desc.concat(unk));
+      }
+    }
   };
 
   const values = ({
