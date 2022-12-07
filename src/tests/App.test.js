@@ -101,8 +101,8 @@ describe('Teste do App', () => {
     const text = screen.findByText(/rotation_period maior que 20/i);
     const btn = screen.findByRole('btn', {name: /apagar/i});
 
-    waitFor(() => expect(text).toBeInTheDocument);
-    waitFor(() => expect(btn).toBeInTheDocument);
+    waitFor(() => expect(text).toBeInTheDocument());
+    waitFor(() => expect(btn).toBeInTheDocument());
   });
 
   it('08 - Testa a filtragem pelos inputs de número', () => {
@@ -141,5 +141,87 @@ describe('Teste do App', () => {
     })
 
     waitFor(() => expect(planetName).toHaveLength(1));
+  });
+
+  it('09 - Testa a ordenação da tabela', () => {
+
+    const orderColumn = screen.getByTestId('column-sort');
+    const orderAsc = screen.getByTestId('column-sort-input-asc');
+    const orderDesc = screen.getByTestId('column-sort-input-desc');
+    const orderBtn = screen.getByTestId('column-sort-button')
+    const planetName = screen.findAllByTestId('planet-name');
+
+    waitFor(() => expect(planetName[0]).toHaveTextContent(/alderaan/i));
+
+    act(() => {
+      userEvent.selectOptions(orderColumn, 'population');
+      userEvent.click(orderAsc);
+      userEvent.click(orderBtn);
+    })
+
+    waitFor(() => expect(orderAsc).toBeChecked());
+    waitFor(() => expect(planetName[0]).toHaveTextContent(/yavin iv/i));
+
+    act(() => {
+      userEvent.selectOptions(orderColumn, 'diameter');
+      userEvent.click(orderDesc);
+      userEvent.click(orderBtn);
+    })
+
+    waitFor(() => expect(orderDesc).toBeChecked());
+    waitFor(() => expect(planetName[0]).toHaveTextContent(/bespin/i));
+  });
+
+  it('10 - Testa os botão de apagar todos os filtros', () => {
+
+    const selectColumn = screen.getByTestId('column-filter');
+    const selectComparison = screen.getByTestId('comparison-filter');
+    const inputNumber = screen.getByTestId('value-filter');
+    const filterBtn = screen.getByTestId('button-filter');
+    const removeBtn = screen.getByTestId('button-remove-filters');
+
+    act(() => {
+      userEvent.selectOptions(selectColumn, 'rotation_period');
+      userEvent.selectOptions(selectComparison, 'maior que');
+      userEvent.type(inputNumber, '20');
+      userEvent.click(filterBtn);
+    })
+
+    const text = screen.findByText(/rotation_period maior que 20/i);
+    const btn = screen.findByRole('button', {name: /apagar/i});
+
+    waitFor(() => expect(text).toBeInTheDocument());
+    waitFor(() => expect(btn).toBeInTheDocument());
+
+    userEvent.click(removeBtn);
+
+    waitFor(() => expect(text).not.toBeInTheDocument());
+    waitFor(() => expect(btn).not.toBeInTheDocument());
+  });
+
+  it('11 - Testa os botão de apagar um filtro', () => {
+
+    const selectColumn = screen.getByTestId('column-filter');
+    const selectComparison = screen.getByTestId('comparison-filter');
+    const inputNumber = screen.getByTestId('value-filter');
+    const filterBtn = screen.getByTestId('button-filter');
+
+    act(() => {
+      userEvent.selectOptions(selectColumn, 'population');
+      userEvent.selectOptions(selectComparison, 'maior que');
+      userEvent.type(inputNumber, '0');
+      userEvent.click(filterBtn);
+    })
+
+    const text = screen.getByText(/population maior que 0/i);
+    const btn = screen.getByRole('button', {name: /apagar/i});
+
+    waitFor(() => expect(text).toBeInTheDocument());
+    waitFor(() => expect(btn).toBeInTheDocument());
+
+    userEvent.click(btn);
+
+    waitFor(() => expect(text).not.toBeInTheDocument());
+    waitFor(() => expect(btn).not.toBeInTheDocument());
   });
 });
