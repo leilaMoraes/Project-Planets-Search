@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
 import PlanetsProvider from '../context/PlanetsProvider';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 import data from './mocks/ApiMock';
 
 describe('Teste do App', () => {
@@ -90,10 +91,12 @@ describe('Teste do App', () => {
     const inputNumber = screen.getByTestId('value-filter');
     const filterBtn = screen.getByTestId('button-filter');
 
-    userEvent.selectOptions(selectColumn, 'rotation_period');
-    userEvent.selectOptions(selectComparison, 'maior que');
-    userEvent.type(inputNumber, '20');
-    userEvent.click(filterBtn);
+    act(() => {
+      userEvent.selectOptions(selectColumn, 'rotation_period');
+      userEvent.selectOptions(selectComparison, 'maior que');
+      userEvent.type(inputNumber, '20');
+      userEvent.click(filterBtn);
+    })
 
     const text = screen.findByText(/rotation_period maior que 20/i);
     const btn = screen.findByRole('btn', {name: /apagar/i});
@@ -112,11 +115,31 @@ describe('Teste do App', () => {
 
     waitFor(() => expect(planetName).toHaveLength(10));
 
-    userEvent.selectOptions(selectColumn, 'rotation_period');
-    userEvent.selectOptions(selectComparison, 'maior que');
-    userEvent.type(inputNumber, '20');
-    userEvent.click(filterBtn);
+    act(() => {
+      userEvent.selectOptions(selectColumn, 'rotation_period');
+      userEvent.selectOptions(selectComparison, 'maior que');
+      userEvent.type(inputNumber, '20');
+      userEvent.click(filterBtn);
+    })
 
     waitFor(() => expect(planetName).toHaveLength(8));
+
+    act(() => {
+      userEvent.selectOptions(selectColumn, 'orbital_period');
+      userEvent.selectOptions(selectComparison, 'menor que');
+      userEvent.type(inputNumber, '400');
+      userEvent.click(filterBtn);
+    })
+
+    waitFor(() => expect(planetName).toHaveLength(5));
+
+    act(() => {
+      userEvent.selectOptions(selectColumn, 'population');
+      userEvent.selectOptions(selectComparison, 'igual a');
+      userEvent.type(inputNumber, '1000');
+      userEvent.click(filterBtn);
+    })
+
+    waitFor(() => expect(planetName).toHaveLength(1));
   });
 });
